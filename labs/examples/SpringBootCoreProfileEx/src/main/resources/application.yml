@@ -1,0 +1,16 @@
+spring.profiles.active: prod
+---
+springprofiles: dev
+dbname: sboot_dev
+
+---
+spring.profiles: prod
+dbname: sboot_prod
+
+---
+spring.profiles: test
+dbname: sboot_test
+
+---
+spring.profiles: uat
+dbname: sboot_uat
