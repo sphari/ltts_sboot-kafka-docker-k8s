@@ -1,0 +1,85 @@
+#Sharing Directories between local to VM
+/home/springk8slab/sboot-training
+sudo mount -t vboxsf ltts_sboot-kafka-docker-k8s /home/springk8slab/sboot-training
+
+#SSH
+ssh -i [key file path] [hostname]
+
+#Java Installation
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java8-installer
+java -version
+
+#Locate java installation directory
+whereis java
+
+#STS Installation
+cd ~/Downloads
+curl https://download.springsource.com/release/STS/3.9.0.RELEASE/dist/e4.7/spring-tool-suite-3.9.0.RELEASE-e4.7.0-linux-gtk-x86_64.tar.gz -o sts-3.9.0.tar.gz
+sudo tar xzvf sts-3.9.0.tar.gz -C ~/sboot-training/programs
+cd ~/sboot-training/programs/sts-3.9.0	(=> verify installation)
+ 
+#Kafka Installation
+cd ~/Downloads
+curl http://mirrors.wuchna.com/apachemirror/kafka/2.0.0/kafka_2.11-2.0.0.tgz -o kafka-2.0.0.tgz
+sudo tar xzvf kafka-2.0.0.tgz -C ~/sboot-training/programs
+cd ~/sboot-training/programs/kafka-2.0.0	(=> verify installation)
+
+#Spring CLI Installation (tar ball)
+cd ~/Downloads
+curl https://repo.spring.io/release/org/springframework/boot/spring-boot-cli/2.0.4.RELEASE/spring-boot-cli-2.0.4.RELEASE-bin.tar.gz -o spring-boot-cli-2.0.4.tar.gz
+sudo tar xzvf spring-boot-cli-2.0.4.tar.gz -C ~/sboot-training/programs
+cd ~/sboot-training/programs/spring-2.0.4.RELEASE
+spring --version	(=> verify installation)
+
+#Spring CLI Installation (package installation)
+sudo apt-get update
+sudo apt install spring
+
+#Starting STS
+cd ~/sboot-training/programs/sts-3.9.0
+./STS
+
+#Starting Kafka
+cd ~/sboot-training/programs/kafka-2.0.0
+sudo bin/zookeeper-server-start.sh config/zookeeper.properties	(=> Zookeeper server will start on port 2181)
+sudo bin/kafka-server-start.sh config/server.properties			(=> Kafka server will start)
+
+#Starting Kafka Windows
+cd C:\Kafka\kafka_2.10
+bin\windows\zookeeper-server-start.bat config\zookeeper.properties
+bin\windows\kafka-server-start.bat config\server.properties	
+
+#Working with Docker
+docker version
+docker info												(=> Docker details)
+docker image ls											(=> Lists images)
+docker ps												(=> Lists active containers)
+docker ps -as											(=> Lists all containers)
+docker build <dockerfilepath> <target image path>		(=> Build image from Dockerfile)
+docker build --build-arg JAR_FILE=a_value .				(=> Build image with command line args)
+docker build -t sboot-docker --build-arg JAR_FILE=./target/*.jar .		(=> Build image with command line args)
+docker run <image path> <optional args>					(=> Starts container)
+docker run -e "env_var_name=another_value" <image id>	(=> Start container with environmental varialbles)
+docker stop <container id/name>							(=> Stop container)
+docker rm <container id/name>							(=> Remove container)
+docker image rm <image id/name>							(=> Remove image)
+docker pull <image id/name>								(=> Pull image from Hub)
+docker inspect <containerid>							(=> List docker container detail)
+docker-machine ip										(=> Show docker machine ip)
+
+#Spring Boot Docker Example
+docker build -t sboot/sboot-docker:latest --build-arg JAR_FILE=./target/*.jar .
+docker run -p 8080:8080 sboot-docker
+
+#Jenkins Docker image setup Example
+docker pull jenkins
+docker run -p 8080:8080 -p 50000:50000 jenkins
+3df307ca21874a66a0d10a8a9c3bb8		(=> Auth key)
+
+
+#Starting Kubernetes
+minikube start		(=> will take few minutes to start)
+kubectl cluster-info	(=> shows k8s master url)
+minikube dashboard 		(=> opens minikube dashboard in browser)
